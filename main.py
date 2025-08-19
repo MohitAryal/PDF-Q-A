@@ -7,7 +7,6 @@ from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.vectorstores import VectorStoreRetriever
 from langchain_core.prompts import ChatPromptTemplate
-import re
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -28,11 +27,10 @@ prompt = ChatPromptTemplate([
     ('system', 'You are a helpful assistant responding to user queries using the following context. {context}'),
     ('human', '{input}')
 ])
-llm = ChatGroq(model="deepseek-r1-distill-llama-70b", temperature=0)
+llm = ChatGroq(model="deepseek-r1-distill-llama-70b", temperature=0, reasoning_format='hidden')
 
 doc_chain = create_stuff_documents_chain(llm=llm, prompt=prompt)
 retrieval_chain = create_retrieval_chain(retriever, doc_chain)
 
 response = retrieval_chain.invoke({'input': 'Which vector DB is user-friendly?'})
-clean_answer = re.sub(r"<think>.*?</think>", "", response['answer'], flags=re.DOTALL).strip()
-print(clean_answer)
+print(response['answer'])
