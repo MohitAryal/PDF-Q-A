@@ -8,7 +8,7 @@ context-aware answers.
 
 ------------------------------------------------------------------------
 
-## 🚀 Features
+##  Features
 
 -   Loads PDF documents using `PyPDFLoader`.
 -   Splits documents into manageable chunks with
@@ -22,7 +22,7 @@ context-aware answers.
 
 ------------------------------------------------------------------------
 
-## 📂 Project Structure
+##  Project Structure
 
     project/
     │── sample_data/        # Store PDFs here (e.g., one.pdf)
@@ -33,16 +33,16 @@ context-aware answers.
 
 ------------------------------------------------------------------------
 
-## 📦 Installation
+##  Installation
 
 ``` bash
 # Clone this repository
-git clone <your-repo-link>
-cd <your-repo-name>
+git clone https://github.com/MohitAryal/PDF-Q-A
+cd PDF-Q-A
 
 # Create and activate virtual environment
 python -m venv venv
-source venv/bin/activate   # On Windows: venv\Scripts\activate
+source venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
@@ -50,7 +50,7 @@ pip install -r requirements.txt
 
 ------------------------------------------------------------------------
 
-## ⚙️ Environment Setup
+## Environment Setup
 
 Create a `.env` file in the project root and add your Groq API key:
 
@@ -60,70 +60,21 @@ GROQ_API_KEY=your_groq_api_key
 
 ------------------------------------------------------------------------
 
-## 🛠️ Usage
+## Usage
 
 Place your PDF file inside the `sample_data` folder.\
-For example: `sample_data/one.pdf`.
-
-``` python
-from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_groq import ChatGroq
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_community.document_loaders import PyPDFLoader
-from langchain_chroma import Chroma
-from langchain.chains import create_retrieval_chain
-from langchain.chains.combine_documents import create_stuff_documents_chain
-from langchain_core.vectorstores import VectorStoreRetriever
-from langchain_core.prompts import ChatPromptTemplate
-from dotenv import load_dotenv
-
-load_dotenv()
-
-# Load PDF
-loader = PyPDFLoader("sample_data/one.pdf", mode="single")
-docs = loader.load()
-
-# Split into chunks
-splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-chunks = splitter.split_documents(docs)
-
-# Create embeddings
-embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-
-# Store in ChromaDB
-vector_store = Chroma(collection_name="Pdf", embedding_function=embeddings, persist_directory="chroma")
-vector_store.add_documents(chunks)
-
-# Create retriever
-retriever = VectorStoreRetriever(vectorstore=vector_store)
-
-# Define prompt
-prompt = ChatPromptTemplate([
-    ("system", "You are a helpful assistant responding to user queries using the following context. {context}"),
-    ("human", "{input}")
-])
-
-# Initialize model
-llm = ChatGroq(model="deepseek-r1-distill-llama-70b", temperature=0, reasoning_format="hidden")
-
-# Create retrieval chain
-doc_chain = create_stuff_documents_chain(llm=llm, prompt=prompt)
-retrieval_chain = create_retrieval_chain(retriever, doc_chain)
-
-# Query
-response = retrieval_chain.invoke({"input": "Which vector DB is user-friendly?"})
-print(response["answer"])
-```
+For example: `sample_data/YourPDF.pdf`.
 
 ------------------------------------------------------------------------
 
-## 📊 Example Output
+## Example Output
 
-    ChromaDB is considered one of the most user-friendly vector databases due to its simplicity and ease of integration.
+    Query: Which vector DB is user-friendly?
+    Answer: ChromaDB is considered one of the most user-friendly vector databases due to its simplicity and ease of integration.
 
 ------------------------------------------------------------------------
 
-## 📌 Requirements
+## Requirements
 
 -   Python 3.10+
 -   LangChain
@@ -139,7 +90,3 @@ pip install -r requirements.txt
 ```
 
 ------------------------------------------------------------------------
-
-## 📄 License
-
-This project is licensed under the MIT License.
