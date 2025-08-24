@@ -26,7 +26,6 @@ context-aware answers.
 
     project/
     │── sample_data/        # Store PDFs here (e.g., one.pdf)
-    │── chroma/             # Persistent ChromaDB storage
     │── main.py             # RAG pipeline implementation
     │── requirements.txt    # Dependencies
     │── README.md           # Documentation
@@ -78,9 +77,9 @@ For example: `sample_data/YourPDF.pdf`.
 
 -   Python 3.10+
 -   LangChain
--   ChromaDB
+-   LangChain Chroma
 -   HuggingFace Transformers
--   Groq API access
+-   LangChain Groq
 -   dotenv
 
 Install all dependencies via:
